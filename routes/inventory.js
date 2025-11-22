@@ -51,9 +51,8 @@ const validateInventory = (req, res, next) => {
   next();
 };
 
-// Use the correct function names based on what's available
 // Route to management view
-router.get('/', invController.buildManagement || invController.buildManagementView);
+router.get('/', invController.buildManagement);
 
 // New routes for assignment 4
 router.get('/add-classification', invController.buildAddClassification);
@@ -61,18 +60,8 @@ router.post('/add-classification', validateClassification, invController.addClas
 router.get('/add-inventory', invController.buildAddInventory);
 router.post('/add-inventory', validateInventory, invController.addInventory);
 
-// Existing routes - use whatever functions exist
+// Existing routes
 router.get('/type/:classificationId', invController.buildByClassificationId);
 router.get('/detail/:invId', invController.buildByInventoryId);
 
 module.exports = router;
-
-// Catch-all for invalid inventory routes
-router.get('*', (req, res) => {
-  res.status(404).render('errors/error', {
-    title: 'Page Not Found',
-    message: 'The requested inventory page was not found.',
-    nav: await utilities.getNav(),
-    errors: null
-  });
-});
