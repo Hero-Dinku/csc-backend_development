@@ -585,3 +585,298 @@ img[loading=\"lazy\"] {
         font-size: 2rem;
     }
 }
+
+/* Management View */
+.management-view {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.management-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+    .management-links {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Forms */
+.add-classification,
+.add-inventory {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.form-group input:valid {
+    border-color: #27ae60;
+}
+
+.form-group input:invalid {
+    border-color: #e74c3c;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #7f8c8d;
+    font-size: 0.875rem;
+}
+
+/* Messages */
+.messages {
+    margin-bottom: 2rem;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+
+.message.success {
+    background-color: #d5f4e6;
+    border-left-color: #27ae60;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    border-left-color: #e74c3c;
+    color: #721c24;
+}
+
+.message.info {
+    background-color: #d1ecf1;
+    border-left-color: #3498db;
+    color: #0c5460;
+}
+
+/* Form validation styles */
+.form-group input:required + small::after {
+    content: ' *';
+    color: #e74c3c;
+}
+
+/* Sticky form enhancements */
+.inventory-form .form-group input,
+.inventory-form .form-group select,
+.inventory-form .form-group textarea {
+    background-color: #fff;
+}
+
+.inventory-form .form-group input:focus,
+.inventory-form .form-group select:focus,
+.inventory-form .form-group textarea:focus {
+    background-color: #f8f9fa;
+}
+
+/* Classification form specific */
+.classification-form {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+/* Inventory form specific */
+.inventory-form {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.inventory-form .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Button styles for forms */
+.classification-form .btn-primary,
+.inventory-form .btn-primary {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Responsive form adjustments */
+@media screen and (max-width: 768px) {
+    .management-view,
+    .add-classification,
+    .add-inventory {
+        padding: 1rem;
+    }
+    
+    .inventory-form,
+    .classification-form {
+        padding: 1rem;
+    }
+}
+
+/* Enhanced select styling */
+.form-group select {
+    background-color: white;
+    cursor: pointer;
+}
+
+.form-group select option {
+    padding: 0.5rem;
+}
+
+/* Textarea specific styles */
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Number input specific styles */
+.form-group input[type=\"number\"] {
+    -moz-appearance: textfield;
+}
+
+.form-group input[type=\"number\"]::-webkit-outer-spin-button,
+.form-group input[type=\"number\"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Readonly input styles */
+.form-group input[readonly] {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+/* Management View Styles */
+.management-main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.management-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Form Styles */
+.form-main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group input:valid {
+    border-color: green;
+}
+
+.form-group input:invalid {
+    border-color: red;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Flash Messages */
+.flash-message {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+}
+
+.flash-message.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.flash-message.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
