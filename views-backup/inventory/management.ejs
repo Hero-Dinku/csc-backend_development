@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - CSE Motors</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/header') %>
+    
+    <main class="management-main">
+        <h1>Inventory Management</h1>
+        
+        <% if (message) { %>
+            <div class="flash-message <%= message.type %>">
+                <%= message.message %>
+            </div>
+        <% } %>
+
+        <div class="management-links">
+            <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
+            <a href="/inv/add-inventory" class="btn btn-primary">Add New Vehicle</a>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿<section class=\"add-classification\">
+    <h2>Add New Classification</h2>
+    
+    <% if (messages && messages.length > 0) { %>
+        <div class=\"messages\">
+            <% messages.forEach(message => { %>
+                <div class=\"message <%= message.type || 'error' %>\">
+                    <%= message.text %>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+    
+    <form action=\"/inv/add-classification\" method=\"post\" class=\"classification-form\" novalidate>
+        <div class=\"form-group\">
+            <label for=\"classification_name\">Classification Name:</label>
+            <input 
+                type=\"text\" 
+                id=\"classification_name\" 
+                name=\"classification_name\" 
+                required 
+                pattern=\"[a-zA-Z0-9]+\"
+                title=\"Classification name cannot contain spaces or special characters\"
+                <% if (typeof classification_name !== 'undefined') { %>value=\"<%= classification_name %>\"<% } %>
+            >
+            <small>Classification name cannot contain spaces or special characters</small>
+        </div>
+        
+        <button type=\"submit\" class=\"btn-primary\">Add Classification</button>
+    </form>
+</section>

@@ -1,0 +1,131 @@
+﻿<section class=\"add-inventory\">
+    <h2>Add New Vehicle</h2>
+    
+    <% if (messages && messages.length > 0) { %>
+        <div class=\"messages\">
+            <% messages.forEach(message => { %>
+                <div class=\"message <%= message.type || 'error' %>\">
+                    <%= message.text %>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+    
+    <form action=\"/inv/add-inventory\" method=\"post\" class=\"inventory-form\" novalidate>
+        <div class=\"form-group\">
+            <label for=\"classification_id\">Classification:</label>
+            <%- classificationList %>
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_make\">Make:</label>
+            <input 
+                type=\"text\" 
+                id=\"inv_make\" 
+                name=\"inv_make\" 
+                required 
+                minlength=\"1\"
+                <% if (typeof inv_make !== 'undefined') { %>value=\"<%= inv_make %>\"<% } %>
+            >
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_model\">Model:</label>
+            <input 
+                type=\"text\" 
+                id=\"inv_model\" 
+                name=\"inv_model\" 
+                required 
+                minlength=\"1\"
+                <% if (typeof inv_model !== 'undefined') { %>value=\"<%= inv_model %>\"<% } %>
+            >
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_description\">Description:</label>
+            <textarea 
+                id=\"inv_description\" 
+                name=\"inv_description\" 
+                required 
+                minlength=\"1\"
+            ><% if (typeof inv_description !== 'undefined') { %><%= inv_description %><% } %></textarea>
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_image\">Image Path:</label>
+            <input 
+                type=\"text\" 
+                id=\"inv_image\" 
+                name=\"inv_image\" 
+                value=\"/images/vehicles/no-image.png\"
+                readonly
+            >
+            <small>Using default no-image placeholder</small>
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_thumbnail\">Thumbnail Path:</label>
+            <input 
+                type=\"text\" 
+                id=\"inv_thumbnail\" 
+                name=\"inv_thumbnail\" 
+                value=\"/images/vehicles/no-image-tn.png\"
+                readonly
+            >
+            <small>Using default no-image thumbnail</small>
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_price\">Price:</label>
+            <input 
+                type=\"number\" 
+                id=\"inv_price\" 
+                name=\"inv_price\" 
+                required 
+                min=\"0\" 
+                step=\"0.01\"
+                <% if (typeof inv_price !== 'undefined') { %>value=\"<%= inv_price %>\"<% } %>
+            >
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_year\">Year:</label>
+            <input 
+                type=\"number\" 
+                id=\"inv_year\" 
+                name=\"inv_year\" 
+                required 
+                min=\"1900\" 
+                max=\"<%= new Date().getFullYear() + 1 %>\"
+                pattern=\"\\d{4}\"
+                <% if (typeof inv_year !== 'undefined') { %>value=\"<%= inv_year %>\"<% } %>
+            >
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_miles\">Miles:</label>
+            <input 
+                type=\"number\" 
+                id=\"inv_miles\" 
+                name=\"inv_miles\" 
+                required 
+                min=\"0\"
+                <% if (typeof inv_miles !== 'undefined') { %>value=\"<%= inv_miles %>\"<% } %>
+            >
+        </div>
+        
+        <div class=\"form-group\">
+            <label for=\"inv_color\">Color:</label>
+            <input 
+                type=\"text\" 
+                id=\"inv_color\" 
+                name=\"inv_color\" 
+                required 
+                minlength=\"1\"
+                <% if (typeof inv_color !== 'undefined') { %>value=\"<%= inv_color %>\"<% } %>
+            >
+        </div>
+        
+        <button type=\"submit\" class=\"btn-primary\">Add Vehicle</button>
+    </form>
+</section>

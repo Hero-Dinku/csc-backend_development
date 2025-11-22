@@ -1,16 +1,31 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include("../partials/head", {title: title || "CSE Motors"}) %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <%- include("../partials/header") %>
-    <%- typeof nav !== 'undefined' ? nav : include("../partials/nav") %>
-    
+    <header>
+        <h1><a href="/">CSE Motors</a></h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/inv/type/1">Custom</a></li>
+                <li><a href="/inv/type/2">Sedan</a></li>
+                <li><a href="/inv/type/3">SUV</a></li>
+                <li><a href="/inv/type/4">Truck</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main>
         <%- body %>
     </main>
-    
-    <%- include("../partials/footer") %>
+
+    <footer>
+        <p>&copy; 2025 CSE Motors. All rights reserved.</p>
+    </footer>
 </body>
 </html>
