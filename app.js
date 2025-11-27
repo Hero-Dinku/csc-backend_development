@@ -1,5 +1,7 @@
 ﻿const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const flash = require('connect-flash');
 const path = require('path');
 
 const app = express();
@@ -8,6 +10,23 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// Session configuration
+app.use(session({
+    secret: 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
+// Flash messages
+app.use(flash());
+
+// Make flash messages available to all views
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
 
 // View engine
 app.set('view engine', 'ejs');
@@ -21,5 +40,5 @@ app.use('/inv', require('./routes/inventory'));
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log('Server running on port ' + PORT);
 });

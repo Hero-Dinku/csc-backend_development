@@ -1,4 +1,177 @@
-﻿<section class="hero">
-    <h2>Welcome to CSE Motors!</h2>
-    <p>Your trusted partner for quality vehicles.</p>
-</section>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Motors - Premium Vehicles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .hero {
+            background: url('/images/hero-bg.jpg') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+        }
+        
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+        }
+        
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Premium Vehicles</h1>
+            <h1>Exceptional Service</h1>
+            <p>Discover your perfect ride from our curated collection of premium vehicles</p>
+            <a href="/inv" class="cta-button">Explore Inventory</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>Why Choose CSE Motors?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🚗 Premium Selection</h3>
+                    <p>Hand-picked vehicles from top manufacturers with rigorous quality checks</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💰 Best Prices</h3>
+                    <p>Competitive pricing with transparent costs and no hidden fees</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔧 Expert Service</h3>
+                    <p>Professional maintenance and support from our certified technicians</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⭐ Trusted Reputation</h3>
+                    <p>Years of excellence in serving the community with quality vehicles</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CSE Motors. All rights reserved.</p>
+            <p>Premium Vehicles | Exceptional Service | Unbeatable Value</p>
+        </div>
+    </footer>
+</body>
+</html>

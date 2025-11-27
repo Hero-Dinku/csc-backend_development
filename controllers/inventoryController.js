@@ -1,184 +1,124 @@
 ﻿const invModel = require('../models/inventory-model');
-const utilities = require('../utilities');
 
-const invCont = {};
+const invController = {};
 
-/* ***************************
- *  Build management view
- * ************************** */
-invCont.buildManagement = async function (req, res, next) {
-  try {
-    const nav = await utilities.getNav();
-    res.render('inventory/management', {
-      title: 'Inventory Management',
-      nav,
-      message: res.locals.message || null,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/* ***************************
- *  Build Add Classification View
- * ************************** */
-invCont.buildAddClassification = async function (req, res, next) {
-  try {
-    const nav = await utilities.getNav();
-    res.render('inventory/add-classification', {
-      title: 'Add New Classification',
-      nav,
-      errors: null,
-      message: res.locals.message || null,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/* ***************************
- *  Add New Classification
- * ************************** */
-invCont.addClassification = async function (req, res, next) {
-  const { classification_name } = req.body;
-
-  try {
-    const result = await invModel.addClassification(classification_name);
-    
-    if (result) {
-      req.flash('success', 'Classification added successfully!');
-      res.redirect('/inv');
-    } else {
-      req.flash('error', 'Failed to add classification.');
-      res.redirect('/inv/add-classification');
+// Build management view
+invController.buildManagement = async (req, res, next) => {
+    try {
+        res.render('inventory/management', {
+            title: 'Inventory Management',
+            messages: res.locals.messages
+        });
+    } catch (error) {
+        next(error);
     }
-  } catch (error) {
-    req.flash('error', 'Error adding classification: ' + error.message);
-    res.redirect('/inv/add-classification');
-  }
 };
 
-/* ***************************
- *  Build Add Inventory View
- * ************************** */
-invCont.buildAddInventory = async function (req, res, next) {
-  try {
-    const nav = await utilities.getNav();
-    const classificationList = await utilities.buildClassificationList();
-    
-    res.render('inventory/add-inventory', {
-      title: 'Add New Vehicle',
-      nav,
-      classificationList,
-      errors: null,
-      message: res.locals.message || null,
-      formData: {},
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/* ***************************
- *  Add New Inventory
- * ************************** */
-invCont.addInventory = async function (req, res, next) {
-  const {
-    classification_id,
-    inv_make,
-    inv_model,
-    inv_year,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_miles,
-    inv_color
-  } = req.body;
-
-  try {
-    const result = await invModel.addInventory({
-      classification_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image: inv_image || '/images/vehicles/no-image.png',
-      inv_thumbnail: inv_thumbnail || '/images/vehicles/no-image-tn.png',
-      inv_price,
-      inv_miles,
-      inv_color
-    });
-
-    if (result) {
-      req.flash('success', 'Vehicle added successfully!');
-      res.redirect('/inv');
-    } else {
-      const nav = await utilities.getNav();
-      const classificationList = await utilities.buildClassificationList(classification_id);
-      
-      res.render('inventory/add-inventory', {
-        title: 'Add New Vehicle',
-        nav,
-        classificationList,
-        errors: null,
-        message: { type: 'error', message: 'Failed to add vehicle.' },
-        formData: req.body,
-      });
+// Build add classification view
+invController.buildAddClassification = async (req, res, next) => {
+    try {
+        res.render('inventory/add-classification', {
+            title: 'Add Classification',
+            messages: res.locals.messages,
+            classification_name: req.flash('formData')?.[0]?.classification_name || ''
+        });
+    } catch (error) {
+        next(error);
     }
-  } catch (error) {
-    const nav = await utilities.getNav();
-    const classificationList = await utilities.buildClassificationList(classification_id);
-    
-    res.render('inventory/add-inventory', {
-      title: 'Add New Vehicle',
-      nav,
-      classificationList,
-      errors: null,
-      message: { type: 'error', message: 'Error adding vehicle: ' + error.message },
-      formData: req.body,
-    });
-  }
 };
 
-/* ***************************
- *  Build inventory by classification view
- * ************************** */
-invCont.buildByClassificationId = async function (req, res, next) {
-  const classification_id = req.params.classificationId;
-  try {
-    const nav = await utilities.getNav();
-    const data = await invModel.getInventoryByClassificationId(classification_id);
-    const grid = await utilities.buildClassificationGrid(data);
-    let className = data[0]?.classification_name || "Unknown";
-    res.render("inventory/classification", {
-      title: className + " vehicles",
-      nav,
-      grid,
-    });
-  } catch (error) {
-    next(error);
-  }
+// Add new classification
+invController.addClassification = async (req, res, next) => {
+    try {
+        const { classification_name } = req.body;
+        
+        const result = await invModel.addClassification(classification_name);
+        
+        if (result.success) {
+            req.flash('success', 'Classification added successfully!');
+            res.redirect('/inv');
+        } else {
+            req.flash('error', 'Failed to add classification: ' + result.error);
+            res.redirect('/inv/add-classification');
+        }
+    } catch (error) {
+        req.flash('error', 'Error adding classification: ' + error.message);
+        res.redirect('/inv/add-classification');
+    }
 };
 
-/* ***************************
- *  Build inventory by item view
- * ************************** */
-invCont.buildByInventoryId = async function (req, res, next) {
-  const inv_id = req.params.invId;
-  try {
-    const nav = await utilities.getNav();
-    const data = await invModel.getInventoryById(inv_id);
-    const grid = await utilities.buildVehicleDetail(data);
-    let vehicleName = data[0]?.inv_make + " " + data[0]?.inv_model || "Vehicle";
-    res.render("inventory/detail", {
-      title: vehicleName,
-      nav,
-      grid,
-    });
-  } catch (error) {
-    next(error);
-  }
+// Build add inventory view
+invController.buildAddInventory = async (req, res, next) => {
+    try {
+        const classifications = await invModel.getClassifications();
+        
+        const formData = req.flash('formData')[0] || {};
+        
+        res.render('inventory/add-inventory', {
+            title: 'Add Vehicle',
+            messages: res.locals.messages,
+            classifications,
+            formData
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
-module.exports = invCont;
+// Add new inventory
+invController.addInventory = async (req, res, next) => {
+    try {
+        const inventoryData = req.body;
+        
+        const result = await invModel.addInventory(inventoryData);
+        
+        if (result.success) {
+            req.flash('success', 'Vehicle added successfully!');
+            res.redirect('/inv');
+        } else {
+            req.flash('error', 'Failed to add vehicle: ' + result.error);
+            req.flash('formData', inventoryData);
+            res.redirect('/inv/add-inventory');
+        }
+    } catch (error) {
+        req.flash('error', 'Error adding vehicle: ' + error.message);
+        req.flash('formData', req.body);
+        res.redirect('/inv/add-inventory');
+    }
+};
+
+// Build inventory by classification view
+invController.buildByClassificationId = async (req, res, next) => {
+    try {
+        const classification_id = req.params.classificationId;
+        const data = await invModel.getInventoryByClassificationId(classification_id);
+        
+        const title = data.length > 0 ? data[0].classification_name : 'Vehicles';
+        
+        res.render('inventory/classification', {
+            title: title,
+            vehicles: data,
+            messages: res.locals.messages
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Build vehicle detail view
+invController.buildByInventoryId = async (req, res, next) => {
+    try {
+        const inventory_id = req.params.inventoryId;
+        const data = await invModel.getInventoryById(inventory_id);
+        
+        res.render('inventory/detail', {
+            title: data.inv_make + ' ' + data.inv_model,
+            vehicle: data,
+            messages: res.locals.messages
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = invController;

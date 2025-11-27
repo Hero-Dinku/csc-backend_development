@@ -1,56 +1,48 @@
 ﻿const express = require('express');
 const router = express.Router();
+const invController = require('../controllers/inventoryController');
+const validation = require('../utilities/validation');
 
 // Management view
-router.get('/', (req, res) => {
-    res.render('inventory/management', {
-        title: 'Inventory Management',
-        message: null
-    });
-});
+router.get('/', invController.buildManagement);
 
-// Add classification
-router.get('/add-classification', (req, res) => {
-    res.render('inventory/add-classification', {
-        title: 'Add Classification',
-        message: null
-    });
-});
+// Add classification - GET
+router.get('/add-classification', invController.buildAddClassification);
 
-router.post('/add-classification', (req, res) => {
-    const { classification_name } = req.body;
-    // Simulate success
-    res.redirect('/inv?message=Classification added successfully');
-});
+// Add classification - POST with validation
+router.post('/add-classification', 
+    (req, res, next) => {
+        const errors = validation.checkClassificationName(req.body.classification_name);
+        if (errors.length > 0) {
+            req.flash('error', errors.join(', '));
+            return res.redirect('/inv/add-classification');
+        }
+        next();
+    },
+    invController.addClassification
+);
 
-// Add inventory
-router.get('/add-inventory', (req, res) => {
-    res.render('inventory/add-inventory', {
-        title: 'Add Vehicle',
-        message: null,
-        formData: {}
-    });
-});
+// Add inventory - GET
+router.get('/add-inventory', invController.buildAddInventory);
 
-router.post('/add-inventory', (req, res) => {
-    // Simulate success
-    res.redirect('/inv?message=Vehicle added successfully');
-});
+// Add inventory - POST with validation
+router.post('/add-inventory',
+    (req, res, next) => {
+        const errors = validation.checkInventoryData(req.body);
+        if (errors.length > 0) {
+            req.flash('error', errors.join(', '));
+            req.flash('formData', req.body); // Make form sticky
+            return res.redirect('/inv/add-inventory');
+        }
+        next();
+    },
+    invController.addInventory
+);
 
 // Classification view
-router.get('/type/:id', (req, res) => {
-    res.render('inventory/classification', {
-        title: 'Vehicles',
-        classificationId: req.params.id
-    });
-});
+router.get('/type/:classificationId', invController.buildByClassificationId);
 
 // Vehicle detail
-router.get('/detail/:id', (req, res) => {
-    res.render('inventory/detail', {
-        title: 'Vehicle Details',
-        vehicleId: req.params.id
-    });
-});
+router.get('/detail/:inventoryId', invController.buildByInventoryId);
 
 module.exports = router;
