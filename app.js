@@ -1,4 +1,5 @@
-﻿const express = require('express');
+﻿require('dotenv').config();
+const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -13,10 +14,13 @@ app.use(express.static('public'));
 
 // Session configuration
 app.use(session({
-    secret: 'your-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24 // 24 hours
+    }
 }));
 
 // Flash messages
@@ -41,4 +45,5 @@ app.use('/inv', require('./routes/inventory'));
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
+    console.log('Environment:', process.env.NODE_ENV || 'development');
 });

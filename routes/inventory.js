@@ -31,7 +31,7 @@ router.post('/add-inventory',
         const errors = validation.checkInventoryData(req.body);
         if (errors.length > 0) {
             req.flash('error', errors.join(', '));
-            req.flash('formData', req.body); // Make form sticky
+            req.flash('formData', req.body);
             return res.redirect('/inv/add-inventory');
         }
         next();
@@ -39,10 +39,8 @@ router.post('/add-inventory',
     invController.addInventory
 );
 
-// Classification view
-router.get('/type/:classificationId', invController.buildByClassificationId);
-
-// Vehicle detail
-router.get('/detail/:inventoryId', invController.buildByInventoryId);
+// Remove the problematic routes that don't have controller functions
+// router.get('/type/:classificationId', invController.buildByClassificationId);
+// router.get('/detail/:inventoryId', invController.buildByInventoryId);
 
 module.exports = router;
