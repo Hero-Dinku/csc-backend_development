@@ -1,64 +1,81 @@
-﻿const express = require('express');
+﻿require('dotenv').config();
+const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const flash = require('connect-flash');
 const path = require('path');
-const bodyParser = require('body-parser');
-const env = require('dotenv').config();
+
 const app = express();
 
-// View Engine Setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Static Files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Body Parser Middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-// Session and Flash Messages
-const session = require('express-session');
+// Session configuration - enhanced for production
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
+    secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false, // Changed to false for production
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // HTTPS in production
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        httpOnly: true // Security enhancement
+    }
 }));
 
-const flash = require('connect-flash');
+// Flash messages
 app.use(flash());
 
-// Flash Messages Middleware
+// Make flash messages and user data available to all views
 app.use((req, res, next) => {
-  res.locals.messages = req.flash();
-  next();
+    res.locals.messages = req.flash();
+    res.locals.user = req.session.user || null;
+    res.locals.loggedin = !!req.session.user;
+    next();
 });
 
-// Cookie Parser
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+// View engine
+app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.set('layout', './layouts/layout');
 
 // Routes
-const staticRoute = require('./routes/static');
-const inventoryRoute = require('./routes/inventory');
-const accountRoute = require('./routes/account');
+app.use('/', require('./routes/index'));
+app.use('/inv', require('./routes/inventory'));
+app.use('/account', require('./routes/account'));
 
-app.use(staticRoute);
-app.use('/inv', inventoryRoute);
-app.use('/account', accountRoute);
+// Health check route for Render
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV 
+    });
+});
 
 // Error handling
 app.use((req, res) => {
-  res.status(404).send('Sorry, page not found!');
+    res.status(404).render('404', { 
+        title: 'Page Not Found',
+        message: 'Sorry, the page you are looking for does not exist.'
+    });
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+    console.error('Server Error:', err.stack);
+    res.status(500).render('500', { 
+        title: 'Server Error',
+        message: 'Something went wrong on our end. Please try again later.'
+    });
 });
 
 // Start Server
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log('Server running on port ' + port);
-  console.log('Environment: ' + (process.env.NODE_ENV || 'development'));
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log('🚀 CSE Motors Server Started!');
+    console.log('📍 Port:', PORT);
+    console.log('🌍 Environment:', process.env.NODE_ENV || 'development');
+    console.log('📊 Database:', process.env.DB_NAME || 'Not configured');
+    console.log('👉 Ready at: http://localhost:' + PORT);
 });
