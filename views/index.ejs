@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSE Motors - Premium Vehicles</title>
+    <title><%= title %></title>
     <style>
         * {
             margin: 0;
@@ -12,97 +12,146 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            color: #333;
         }
         
-        .hero {
-            background: url('/images/hero-bg.jpg') no-repeat center center/cover;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
+            z-index: 1000;
         }
         
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 2rem;
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-links .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+        }
+        
+        .nav-links .btn:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a4190);
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: white;
         }
         
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 700;
         }
         
         .hero p {
             font-size: 1.3rem;
             margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .cta-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: #ff6b6b;
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .hero-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
         
-        .cta-button:hover {
-            background: #ff5252;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
-        }
-        
-        .features {
-            padding: 4rem 2rem;
+        .hero-btn.primary {
             background: white;
-            text-align: center;
+            color: #667eea;
+            border: 2px solid white;
         }
         
-        .features h2 {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #333;
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 5rem 2rem;
+        }
+        
+        .features-container {
             max-width: 1200px;
             margin: 0 auto;
         }
         
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
         .feature-card {
+            text-align: center;
             padding: 2rem;
+            border-radius: 15px;
             background: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
         
@@ -110,68 +159,176 @@
             transform: translateY(-5px);
         }
         
-        .feature-card h3 {
-            color: #667eea;
+        .feature-icon {
+            font-size: 3rem;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
         }
         
-        footer {
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer {
             background: #2c3e50;
             color: white;
             text-align: center;
             padding: 2rem;
-            margin-top: auto;
         }
         
-        .container {
+        /* Flash Messages */
+        .flash-messages {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 4rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CSE Motors</div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/inv">Inventory</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/account/login" class="btn">Login</a>
+                <a href="/account/register">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        <% if (messages && messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+        <% if (messages && messages.error) { %>
+            <div class="alert alert-error">
+                <%= messages.error %>
+            </div>
+        <% } %>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <h1>Premium Vehicles</h1>
-            <h1>Exceptional Service</h1>
-            <p>Discover your perfect ride from our curated collection of premium vehicles</p>
-            <a href="/inv" class="cta-button">Explore Inventory</a>
+        <h1>Premium Vehicles</h1>
+        <p>Exceptional Service</p>
+        <p>Discover your perfect ride from our curated collection of premium vehicles</p>
+        <div class="hero-buttons">
+            <a href="/inv" class="hero-btn primary">Explore Inventory</a>
+            <a href="/account/register" class="hero-btn">Create Account</a>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features">
-        <div class="container">
-            <h2>Why Choose CSE Motors?</h2>
-            <div class="feature-grid">
+        <div class="features-container">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 1rem; font-size: 2.5rem;">Why Choose CSE Motors?</h2>
+            <p style="text-align: center; color: #7f8c8d; font-size: 1.2rem; max-width: 600px; margin: 0 auto 3rem;">Experience the difference with our premium services</p>
+            
+            <div class="features-grid">
                 <div class="feature-card">
-                    <h3>🚗 Premium Selection</h3>
-                    <p>Hand-picked vehicles from top manufacturers with rigorous quality checks</p>
+                    <div class="feature-icon">🚗</div>
+                    <h3>Premium Selection</h3>
+                    <p>Curated collection of high-quality vehicles from trusted brands and reliable sellers.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>💰 Best Prices</h3>
-                    <p>Competitive pricing with transparent costs and no hidden fees</p>
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Quality Guaranteed</h3>
+                    <p>Every vehicle undergoes rigorous inspection and comes with comprehensive warranty options.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>🔧 Expert Service</h3>
-                    <p>Professional maintenance and support from our certified technicians</p>
-                </div>
-                <div class="feature-card">
-                    <h3>⭐ Trusted Reputation</h3>
-                    <p>Years of excellence in serving the community with quality vehicles</p>
+                    <div class="feature-icon">💎</div>
+                    <h3>Expert Service</h3>
+                    <p>Our team of automotive experts provides personalized service and support throughout your journey.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 CSE Motors. All rights reserved.</p>
-            <p>Premium Vehicles | Exceptional Service | Unbeatable Value</p>
-        </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 CSE Motors. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">Premium Automotive Experience</p>
     </footer>
 </body>
 </html>

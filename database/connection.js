@@ -1,34 +1,54 @@
 ﻿const { Pool } = require('pg');
 require('dotenv').config();
 
-// Database configuration - using environment variables for security
-const pool = new Pool({
-    user: process.env.DB_USER || 'postgres',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'cse_motors',
-    password: process.env.DB_PASSWORD || 'password',
-    port: process.env.DB_PORT || 5432,
-    // For Render deployment
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+// Database configuration for Render PostgreSQL
+const config = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
+};
 
-// Test connection
+console.log('🔗 Connecting to Render PostgreSQL...');
+console.log('📡 Host:', process.env.DB_HOST);
+console.log('💾 Database:', process.env.DB_NAME);
+console.log('👤 User:', process.env.DB_USER);
+
+const pool = new Pool(config);
+
+// Test database connection
 pool.on('connect', () => {
-    console.log('✅ Connected to PostgreSQL database');
+    console.log('✅ Connected to Render PostgreSQL database successfully!');
 });
 
 pool.on('error', (err) => {
-    console.error('❌ Database connection error:', err);
+    console.error('❌ Database connection error:', err.message);
 });
 
-// Test the connection on startup
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.error('❌ Database test query failed:', err);
-    } else {
-        console.log('✅ Database test query successful:', res.rows[0]);
+// Enhanced connection test
+const testConnection = async () => {
+    try {
+        const client = await pool.connect();
+        console.log('✅ Database connection test successful');
+        
+        // Test basic query
+        const result = await client.query('SELECT NOW() as current_time, version() as pg_version');
+        console.log('✅ PostgreSQL Version:', result.rows[0].pg_version.split(',')[0]);
+        console.log('✅ Database time:', result.rows[0].current_time);
+        
+        client.release();
+        return true;
+    } catch (error) {
+        console.error('❌ Database test query failed:', error.message);
+        return false;
     }
-});
+};
+
+// Test connection on startup
+testConnection();
 
 module.exports = pool;
