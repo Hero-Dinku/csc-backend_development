@@ -1,49 +1,89 @@
-﻿// Real authentication middleware
-const utilities = {};
+﻿const { Pool } = require('pg');
+require('dotenv').config();
 
-/* ****************************************
- *  Check Login Status (REAL IMPLEMENTATION)
- * *************************************** */
-utilities.checkLogin = (req, res, next) => {
-    console.log('🔐 Checking login status for:', req.session.user?.email || 'No user');
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+});
+
+// Database connection events
+pool.on('connect', () => {
+    console.log('✅ Connected to PostgreSQL database');
+});
+
+pool.on('error', (err) => {
+    console.error('❌ PostgreSQL database connection error:', err);
+});
+
+// Utility functions with comprehensive error handling
+const utilities = {
+    query: async (text, params) => {
+        try {
+            const result = await pool.query(text, params);
+            return result;
+        } catch (error) {
+            console.error('Database query error:', error);
+            throw error;
+        }
+    },
     
-    if (req.session.user) {
-        // User is logged in
-        res.locals.user = req.session.user;
-        res.locals.loggedin = true;
-        console.log('✅ User is logged in:', req.session.user.email);
-        next();
-    } else {
-        // User is not logged in
-        console.log('❌ User not logged in - redirecting to login');
-        req.flash('error', 'Please log in to access this page.');
-        res.redirect('/account/login');
-    }
-};
+    // Get navigation data
+    async getNav() {
+        try {
+            const data = await pool.query(
+                'SELECT classification_id, classification_name FROM classification ORDER BY classification_name'
+            );
+            return data.rows;
+        } catch (error) {
+            console.error('getNav error:', error);
+            return [];
+        }
+    },
+    
+    // Build classification view
+    async buildClassificationGrid(classification_id) {
+        try {
+            const data = await pool.query(
+                'SELECT i.*, c.classification_name FROM inventory AS i JOIN classification AS c ON i.classification_id = c.classification_id WHERE i.classification_id = ',
+                [classification_id]
+            );
+            return data.rows;
+        } catch (error) {
+            console.error('buildClassificationGrid error:', error);
+            return [];
+        }
+    },
 
-/* ****************************************
- *  Check Account Type for Inventory Management
- * *************************************** */
-utilities.checkAccountType = (requiredTypes) => {
-    return (req, res, next) => {
-        console.log('👤 Checking account type for:', req.session.user?.email);
-        
-        if (!req.session.user) {
-            req.flash('error', 'Please log in to access this page.');
-            return res.redirect('/account/login');
+    // Get all inventory items
+    async getAllInventory() {
+        try {
+            const data = await pool.query(
+                'SELECT i.*, c.classification_name FROM inventory AS i JOIN classification AS c ON i.classification_id = c.classification_id ORDER BY i.inv_make, i.inv_model'
+            );
+            return data.rows;
+        } catch (error) {
+            console.error('getAllInventory error:', error);
+            return [];
         }
-        
-        if (requiredTypes.includes(req.session.user.type)) {
-            res.locals.user = req.session.user;
-            res.locals.loggedin = true;
-            console.log('✅ Access granted for:', req.session.user.email);
-            next();
-        } else {
-            console.log('❌ Access denied for:', req.session.user.email);
-            req.flash('error', 'You do not have permission to access this page.');
-            res.redirect('/account');
+    },
+
+    // Check if database is healthy
+    async checkHealth() {
+        try {
+            await pool.query('SELECT 1');
+            return true;
+        } catch (error) {
+            console.error('Database health check failed:', error);
+            return false;
         }
-    };
+    }
 };
 
 module.exports = utilities;

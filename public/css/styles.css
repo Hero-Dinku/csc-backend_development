@@ -1,103 +1,129 @@
-﻿* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+﻿/* Custom CSS for Vehicle Management System */
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
 }
 
-header {
-    background: #2c3e50;
-    color: white;
-    padding: 1rem;
-}
-
-header h1 a {
-    color: white;
-    text-decoration: none;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-}
-
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    min-height: 60vh;
-}
-
 .hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.feature-card {
     text-align: center;
     padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+    border: none;
 }
 
-.management, .form-section {
-    max-width: 600px;
-    margin: 0 auto;
+.feature-card:hover {
+    transform: translateY(-5px);
 }
 
-.actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
 }
 
-.btn {
-    display: inline-block;
-    padding: 1rem 2rem;
-    background: #007bff;
+.form-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.flash-success {
+    background-color: var(--success-color);
     color: white;
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-.form-group {
+    padding: 1rem;
+    border-radius: 5px;
     margin-bottom: 1rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.message {
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 4px;
-}
-
-.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-footer {
-    background: #34495e;
+.flash-error {
+    background-color: var(--danger-color);
     color: white;
-    text-align: center;
     padding: 1rem;
-    margin-top: 2rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.flash-notice {
+    background-color: var(--info-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.welcome-link {
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+.management-main, .update-main {
+    padding: 50px 0;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 200px);
+}
+
+.account-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    transform: translateY(-2px);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
 }

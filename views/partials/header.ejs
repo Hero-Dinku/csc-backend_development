@@ -1,22 +1,58 @@
-﻿<header style="background: #2c3e50; color: white; padding: 1rem 0;">
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
-        <div class="logo">
-            <h1 style="margin: 0; font-size: 1.8rem;">🚗 CSE Motors</h1>
+﻿<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-car"></i> VehiclePro
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <% if (typeof nav !== 'undefined' && nav.length > 0) { %>
+                    <% nav.forEach(item => { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inv/type/<%= item.classification_id %>">
+                                <%= item.classification_name %>
+                            </a>
+                        </li>
+                    <% }) %>
+                <% } %>
+            </ul>
+            
+            <ul class="navbar-nav">
+                <% if (locals.loggedin) { %>
+                    <%# Task 1: Hide "My Account", show "Logout" and Welcome link %>
+                    <li class="nav-item">
+                        <a class="nav-link welcome-link" href="/account/management">
+                            <i class="fas fa-user"></i> Welcome <%= locals.account_firstname %>
+                        </a>
+                    </li>
+                    <% if (locals.account_type === 'Employee' || locals.account_type === 'Admin') { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inv">
+                                <i class="fas fa-tools"></i> Inventory Management
+                            </a>
+                        </li>
+                    <% } %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account/logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                <% } else { %>
+                    <%# Show "My Account" when not logged in %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account/login">
+                            <i class="fas fa-sign-in-alt"></i> My Account
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
         </div>
-        
-        <nav class="brands" style="display: flex; gap: 1.5rem;">
-            <span style="font-weight: bold; color: #ff6b6b;">Premium Brands:</span>
-            <span>Toyota</span>
-            <span>Honda</span>
-            <span>Ford</span>
-            <span>BMW</span>
-            <span>Mercedes</span>
-            <span>Audi</span>
-        </nav>
-        
-        <nav class="main-nav" style="display: flex; gap: 1rem;">
-            <a href="/" style="color: white; text-decoration: none;">Home</a>
-            <a href="/inv" style="color: white; text-decoration: none;">Inventory</a>
-        </nav>
     </div>
 </header>
