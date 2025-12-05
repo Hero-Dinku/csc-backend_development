@@ -36,9 +36,10 @@ function authMiddleware(req, res, next) {
     }
 }
 
-// Routes
+// ===== ROUTES =====
+
+// Home route
 app.get('/', (req, res) => {
-    // Try to get user from token
     const token = req.cookies.token;
     let user = null;
     
@@ -46,7 +47,6 @@ app.get('/', (req, res) => {
         try {
             user = jwt.verify(token, process.env.JWT_SECRET || 'secret');
         } catch (err) {
-            // Token invalid, clear it
             res.clearCookie('token');
         }
     }
@@ -57,6 +57,7 @@ app.get('/', (req, res) => {
     });
 });
 
+// Login routes
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login', error: null });
 });
@@ -65,7 +66,6 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        // Get user from database
         const result = await pool.query(
             'SELECT * FROM account WHERE account_email = $1',
             [email]
@@ -88,7 +88,6 @@ app.post('/login', async (req, res) => {
             });
         }
         
-        // Create JWT
         const token = jwt.sign(
             {
                 account_id: user.account_id,
@@ -101,10 +100,9 @@ app.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
         
-        // Set cookie
         res.cookie('token', token, {
             httpOnly: true,
-            maxAge: 3600000 // 1 hour
+            maxAge: 3600000
         });
         
         res.redirect('/account/management');
@@ -118,6 +116,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Account management routes
 app.get('/account/management', authMiddleware, (req, res) => {
     const showGreeting = req.user.account_type !== 'Client';
     res.render('account/management', {
@@ -140,7 +139,6 @@ app.post('/account/update', authMiddleware, async (req, res) => {
         const { firstname, lastname, email } = req.body;
         const userId = req.user.account_id;
         
-        // Validation
         if (!firstname || !lastname || !email) {
             return res.render('account/update', {
                 title: 'Update Account',
@@ -149,7 +147,6 @@ app.post('/account/update', authMiddleware, async (req, res) => {
             });
         }
         
-        // Update in database
         const result = await pool.query(
             `UPDATE account 
              SET account_firstname = $1, account_lastname = $2, account_email = $3 
@@ -158,7 +155,6 @@ app.post('/account/update', authMiddleware, async (req, res) => {
             [firstname, lastname, email, userId]
         );
         
-        // Update JWT
         const updatedUser = result.rows[0];
         const token = jwt.sign(
             {
@@ -184,7 +180,7 @@ app.post('/account/update', authMiddleware, async (req, res) => {
         res.render('account/update', {
             title: 'Update Account',
             user: req.user,
-            error: 'Update failed: ' + error.message
+            error: 'Update failed'
         });
     }
 });
@@ -202,7 +198,6 @@ app.post('/account/update-password', authMiddleware, async (req, res) => {
         const { currentPassword, newPassword, confirmPassword } = req.body;
         const userId = req.user.account_id;
         
-        // Validation
         if (!currentPassword || !newPassword || !confirmPassword) {
             return res.render('account/update-password', {
                 title: 'Update Password',
@@ -227,7 +222,6 @@ app.post('/account/update-password', authMiddleware, async (req, res) => {
             });
         }
         
-        // Get current password
         const result = await pool.query(
             'SELECT account_password FROM account WHERE account_id = $1',
             [userId]
@@ -244,10 +238,8 @@ app.post('/account/update-password', authMiddleware, async (req, res) => {
             });
         }
         
-        // Hash new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         
-        // Update password
         await pool.query(
             'UPDATE account SET account_password = $1 WHERE account_id = $2',
             [hashedPassword, userId]
@@ -298,24 +290,14 @@ app.get('/test-accounts', (req, res) => {
     `);
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📊 Database status: http://localhost:${PORT}/database-status`);
-    console.log(`🔑 Test accounts: http://localhost:${PORT}/test-accounts`);
-    console.log(`👤 Login: http://localhost:${PORT}/login`);
-});
-
-
-// Export the app for testing or other entry points
+// Export the app
 module.exports = app;
 
-// Only start server if this file is run directly
+// Only start if run directly (for local development)
 if (require.main === module) {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`🚀 Local development server running on http://localhost:${PORT}`);
         console.log(`📊 Database status: http://localhost:${PORT}/database-status`);
-        console.log(`🔑 Test accounts: http://localhost:${PORT}/test-accounts`);
-        console.log(`👤 Login: http://localhost:${PORT}/login`);
     });
 }
