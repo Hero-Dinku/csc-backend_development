@@ -1,418 +1,62 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../layouts/head', { title: title }) %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Vehicle Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .registration-main {
-            padding: 50px 0;
-            background-color: #f8f9fa;
-            min-height: calc(100vh - 200px);
-        }
-        .registration-form {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .password-requirements {
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        .password-match {
-            color: #28a745;
-            font-size: 0.875rem;
-        }
-        .password-mismatch {
-            color: #dc3545;
-            font-size: 0.875rem;
-        }
-        .form-control.is-valid {
-            border-color: #28a745;
-        }
-        .form-control.is-invalid {
-            border-color: #dc3545;
-        }
+        body { padding-top: 50px; background-color: #f5f5f5; }
+        .register-container { max-width: 400px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-    <%- include('../partials/header') %>
-    
-    <main class="registration-main">
-        <div class="container">
-            <div class="registration-form">
-                <h1 class="text-center mb-4"><%= title %></h1>
-                
-                <!-- Display flash messages -->
-                <% if (messages.notice) { %>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> <%= messages.notice %>
-                    </div>
-                <% } %>
-                
-                <% if (messages.success) { %>
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i> <%= messages.success %>
-                    </div>
-                <% } %>
-                
-                <% if (messages.error) { %>
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle"></i> <%= messages.error %>
-                    </div>
-                <% } %>
-
-                <!-- Display validation errors -->
-                <% if (messages.errors && messages.errors.length > 0) { %>
-                    <div class="alert alert-danger">
-                        <h5><i class="fas fa-exclamation-triangle"></i> Please fix the following errors:</h5>
-                        <ul class="mb-0">
-                            <% messages.errors.forEach(error => { %>
-                                <li><%= error %></li>
-                            <% }) %>
-                        </ul>
-                    </div>
-                <% } %>
-
-                <form id="registrationForm" action="/account/register" method="post">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="account_firstname" class="form-label">First Name *</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    id="account_firstname" 
-                                    name="account_firstname" 
-                                    required
-                                    minlength="2"
-                                    value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>"
-                                >
-                                <div class="form-text">Minimum 2 characters</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="account_lastname" class="form-label">Last Name *</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    id="account_lastname" 
-                                    name="account_lastname" 
-                                    required
-                                    minlength="2"
-                                    value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>"
-                                >
-                                <div class="form-text">Minimum 2 characters</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="account_email" class="form-label">Email Address *</label>
-                        <input 
-                            type="email" 
-                            class="form-control" 
-                            id="account_email" 
-                            name="account_email" 
-                            required
-                            value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
-                        >
-                        <div class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="account_password" class="form-label">Password *</label>
-                        <input 
-                            type="password" 
-                            class="form-control" 
-                            id="account_password" 
-                            name="account_password" 
-                            required
-                            minlength="8"
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$"
-                        >
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="account_password_confirm" class="form-label">Confirm Password *</label>
-                        <input 
-                            type="password" 
-                            class="form-control" 
-                            id="account_password_confirm" 
-                            name="account_password_confirm" 
-                            required
-                            minlength="8"
-                        >
-                        <div id="passwordMatchMessage" class="form-text"></div>
-                    </div>
-
-                    <div class="password-requirements">
-                        <h6 class="mb-2"><i class="fas fa-shield-alt"></i> Password Requirements:</h6>
-                        <ul class="small mb-0">
-                            <li>At least <strong>8 characters</strong> long</li>
-                            <li>One <strong>uppercase</strong> letter (A-Z)</li>
-                            <li>One <strong>lowercase</strong> letter (a-z)</li>
-                            <li>One <strong>number</strong> (0-9)</li>
-                            <li>One <strong>special character</strong> (!@#$%^&*)</li>
-                        </ul>
-                    </div>
-
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                            <i class="fas fa-user-plus"></i> Create Account
-                        </button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-4">
-                    <p class="mb-0">Already have an account? <a href="/account/login" class="text-decoration-none">Sign in here</a></p>
+    <div class="container">
+        <div class="register-container">
+            <h1 class="text-center mb-4">Create Account</h1>
+            
+            <% if (messages.error) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= messages.error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+            <% } %>
+            
+            <form action="/account/register" method="post" id="registerForm">
+                <div class="mb-3">
+                    <label for="account_firstname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="account_firstname" name="account_firstname" 
+                           placeholder="Enter your first name" required autofocus>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="account_lastname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="account_lastname" name="account_lastname" 
+                           placeholder="Enter your last name" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="account_email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="account_email" name="account_email" 
+                           placeholder="Enter your email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="account_password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="account_password" name="account_password" 
+                           placeholder="Create a password" required>
+                    <div class="form-text">Password must be at least 8 characters long.</div>
+                </div>
+                
+                <button type="submit" class="btn btn-success w-100 mb-3">Create Account</button>
+            </form>
+            
+            <div class="text-center">
+                <p class="mb-0">Already have an account? <a href="/account/login" class="text-decoration-none">Login here</a></p>
             </div>
         </div>
-    </main>
+    </div>
     
-    <%- include('../partials/footer') %>
-    
-    <!-- Enhanced Client-side validation -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const registrationForm = document.getElementById('registrationForm');
-            const passwordInput = document.getElementById('account_password');
-            const confirmPasswordInput = document.getElementById('account_password_confirm');
-            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
-            const submitBtn = document.getElementById('submitBtn');
-
-            // Real-time password matching validation
-            function checkPasswordMatch() {
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                
-                if (confirmPassword === '') {
-                    passwordMatchMessage.textContent = '';
-                    confirmPasswordInput.classList.remove('is-valid', 'is-invalid');
-                    return false;
-                }
-                
-                if (password === confirmPassword && password.length >= 8) {
-                    passwordMatchMessage.textContent = '✓ Passwords match';
-                    passwordMatchMessage.className = 'password-match';
-                    confirmPasswordInput.classList.remove('is-invalid');
-                    confirmPasswordInput.classList.add('is-valid');
-                    return true;
-                } else {
-                    passwordMatchMessage.textContent = '✗ Passwords do not match';
-                    passwordMatchMessage.className = 'password-mismatch';
-                    confirmPasswordInput.classList.remove('is-valid');
-                    confirmPasswordInput.classList.add('is-invalid');
-                    return false;
-                }
-            }
-
-            // Real-time password strength validation
-            function checkPasswordStrength() {
-                const password = passwordInput.value;
-                const requirements = {
-                    length: password.length >= 8,
-                    lowercase: /[a-z]/.test(password),
-                    uppercase: /[A-Z]/.test(password),
-                    number: /[0-9]/.test(password),
-                    special: /[!@#$%^&*]/.test(password)
-                };
-
-                const isValid = Object.values(requirements).every(req => req);
-                
-                if (password.length > 0) {
-                    passwordInput.style.borderColor = isValid ? '#28a745' : '#dc3545';
-                } else {
-                    passwordInput.style.borderColor = '';
-                }
-            }
-
-            // Event listeners for real-time validation
-            passwordInput.addEventListener('input', function() {
-                checkPasswordStrength();
-                checkPasswordMatch();
-            });
-
-            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-
-            // Form submission validation
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', function(e) {
-                    let isValid = true;
-                    const errors = [];
-
-                    const firstName = document.getElementById('account_firstname').value.trim();
-                    const lastName = document.getElementById('account_lastname').value.trim();
-                    const email = document.getElementById('account_email').value.trim();
-                    const password = document.getElementById('account_password').value;
-                    const confirmPassword = document.getElementById('account_password_confirm').value;
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
-
-                    // Validate first name
-                    if (!firstName || firstName.length < 2) {
-                        errors.push('First name must be at least 2 characters long.');
-                        isValid = false;
-                    }
-
-                    // Validate last name
-                    if (!lastName || lastName.length < 2) {
-                        errors.push('Last name must be at least 2 characters long.');
-                        isValid = false;
-                    }
-
-                    // Validate email
-                    if (!email) {
-                        errors.push('Email is required.');
-                        isValid = false;
-                    } else if (!emailRegex.test(email)) {
-                        errors.push('Please enter a valid email address.');
-                        isValid = false;
-                    }
-
-                    // Validate password
-                    if (!password) {
-                        errors.push('Password is required.');
-                        isValid = false;
-                    } else if (!passwordRegex.test(password)) {
-                        errors.push('Password does not meet the requirements.');
-                        isValid = false;
-                    }
-
-                    // Validate password match
-                    if (password !== confirmPassword) {
-                        errors.push('Passwords do not match.');
-                        isValid = false;
-                    }
-
-                    if (!isValid) {
-                        e.preventDefault();
-                        
-                        // Show detailed error messages
-                        let errorMessage = 'Please fix the following errors:\\n\\n';
-                        errors.forEach((error, index) => {
-                            errorMessage += \\. \System.Management.Automation.ParseException: At line:8 char:21
-+ const app = express();
-+                     ~
-An expression was expected after '('.
-
-At line:11 char:22
-+ app.use(express.json());
-+                      ~
-An expression was expected after '('.
-
-At line:13 char:22
-+ app.use(cookieParser());
-+                      ~
-An expression was expected after '('.
-
-At line:14 char:43
-+ app.use(express.static(path.join(__dirname, 'public')));
-+                                           ~
-Missing argument in parameter list.
-
-At line:25 char:15
-+ app.use(flash());
-+               ~
-An expression was expected after '('.
-
-At line:32 char:13
-+ app.use((req, res, next) => {
-+             ~
-Missing argument in parameter list.
-
-At line:33 char:35
-+   res.locals.messages = req.flash();
-+                                   ~
-An expression was expected after '('.
-
-At line:34 char:38
-+   res.locals.loggedin = req.loggedin || false;
-+                                      ~~
-The token '||' is not a valid statement separator in this version.
-
-At line:40 char:8
-+   next();
-+        ~
-An expression was expected after '('.
-
-At line:45 char:17
-+ app.set('views', path.join(__dirname, 'views'));
-+                 ~
-Missing expression after ','.
-
-Not all parse errors were reported.  Correct the reported errors and try again.
-   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input)
-   at Microsoft.PowerShell.Executor.ExecuteCommandHelper(Pipeline tempPipeline, Exception& exceptionThrown, ExecutionOptions options) System.Management.Automation.ParseException: At line:8 char:21
-+ const app = express();
-+                     ~
-An expression was expected after '('.
-
-At line:11 char:22
-+ app.use(express.json());
-+                      ~
-An expression was expected after '('.
-
-At line:13 char:22
-+ app.use(cookieParser());
-+                      ~
-An expression was expected after '('.
-
-At line:14 char:43
-+ app.use(express.static(path.join(__dirname, 'public')));
-+                                           ~
-Missing argument in parameter list.
-
-At line:25 char:15
-+ app.use(flash());
-+               ~
-An expression was expected after '('.
-
-At line:32 char:13
-+ app.use((req, res, next) => {
-+             ~
-Missing argument in parameter list.
-
-At line:33 char:35
-+   res.locals.messages = req.flash();
-+                                   ~
-An expression was expected after '('.
-
-At line:34 char:38
-+   res.locals.loggedin = req.loggedin || false;
-+                                      ~~
-The token '||' is not a valid statement separator in this version.
-
-At line:40 char:8
-+   next();
-+        ~
-An expression was expected after '('.
-
-At line:45 char:17
-+ app.set('views', path.join(__dirname, 'views'));
-+                 ~
-Missing expression after ','.
-
-Not all parse errors were reported.  Correct the reported errors and try again.
-   at System.Management.Automation.Runspaces.PipelineBase.Invoke(IEnumerable input)
-   at Microsoft.PowerShell.Executor.ExecuteCommandHelper(Pipeline tempPipeline, Exception& exceptionThrown, ExecutionOptions options) A parameter cannot be found that matches parameter name 'la'. Cannot find path 'C:\Users\herod\csc-backend_development' because it does not exist. Cannot find path 'C:\Users\herod\csc-backend_development' because it does not exist. Cannot find path 'C:\Users\herod\Documents\csc-backend_development' because it does not exist. Cannot find path 'C:\Users\herod\csc-backend_development' because it does not exist. Cannot find path 'C:\Users\herod\Documents\csc-backend_development' because it does not exist. Cannot find path 'C:\WINDOWS\system32\csc-backend_development' because it does not exist.\\n\;
-                        });
-                        
-                        alert(errorMessage);
-                    } else {
-                        // Show loading state
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-                        submitBtn.disabled = true;
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,43 +1,81 @@
 ﻿const jwt = require('jsonwebtoken');
+const utilities = require('../utilities');
 
-// JWT verification middleware - Task 5: Middleware for access control
-const jwtAuth = (req, res, next) => {
-    const token = req.cookies.token;
-    
-    if (!token) {
-        req.loggedin = false;
-        return next();
-    }
-
+const jwtAuth = async (req, res, next) => {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.account = decoded;
+        // Get token from cookies
+        const token = req.cookies?.token || req.cookies?.jwt;
+        
+        if (!token) {
+            req.loggedin = false;
+            req.account = null;
+            return next();
+        }
+
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'FallbackSecret');
+        
+        // Get fresh account data from database
+        const result = await utilities.query(
+            'SELECT account_id, account_firstname, account_lastname, account_email, account_type FROM account WHERE account_id = ',
+            [decoded.account_id]
+        );
+
+        if (result.rows.length === 0) {
+            // Invalid account - clear cookie
+            res.clearCookie('token');
+            req.loggedin = false;
+            req.account = null;
+            return next();
+        }
+
+        // Attach account data to request
+        req.account = result.rows[0];
         req.loggedin = true;
-        req.accountId = decoded.account_id;
-        req.accountType = decoded.account_type;
+        
+        // Make account data available to views via res.locals
+        res.locals.account = req.account;
+        res.locals.loggedin = req.loggedin;
+        res.locals.account_firstname = req.account.account_firstname;
+        res.locals.account_type = req.account.account_type;
+        
         next();
     } catch (error) {
+        console.error('JWT Auth Error:', error.message);
+        
+        // Clear invalid token
         res.clearCookie('token');
         req.loggedin = false;
+        req.account = null;
+        res.locals.loggedin = false;
+        res.locals.account = null;
+        
         next();
     }
 };
 
-// Authorization middleware for employee/admin - Task 5: Access control
-const requireAuth = (req, res, next) => {
+// Middleware to require login
+const requireLogin = (req, res, next) => {
     if (!req.loggedin) {
-        req.flash('notice', 'Please log in to access this page.');
+        req.flash('error', 'Please log in to access this page.');
         return res.redirect('/account/login');
     }
     next();
 };
 
-const requireEmployeeOrAdmin = (req, res, next) => {
-    if (!req.loggedin || (req.accountType !== 'Employee' && req.accountType !== 'Admin')) {
-        req.flash('notice', 'You do not have permission to access this page.');
+// Middleware to check account type
+const requireAdmin = (req, res, next) => {
+    if (!req.loggedin) {
+        req.flash('error', 'Please log in to access this page.');
         return res.redirect('/account/login');
     }
+    
+    if (req.account.account_type !== 'Admin' && req.account.account_type !== 'Employee') {
+        req.flash('error', 'You do not have permission to access this page.');
+        return res.redirect('/account/management');
+    }
+    
     next();
 };
 
-module.exports = { jwtAuth, requireAuth, requireEmployeeOrAdmin };
+module.exports = { jwtAuth, requireLogin, requireAdmin };

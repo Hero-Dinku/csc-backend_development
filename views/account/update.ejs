@@ -1,194 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../layouts/head', { title: title }) %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
     <style>
-        .update-main {
-            padding: 50px 0;
-            background-color: #f8f9fa;
-            min-height: calc(100vh - 200px);
-        }
-        .form-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .error { color: red; margin-bottom: 15px; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        .cancel { background: #6c757d; }
     </style>
 </head>
 <body>
-    <%- include('../partials/header') %>
-    
-    <main class="update-main">
-        <div class="container">
-            <h1><%= title %></h1>
-            
-            <!-- Display errors -->
-            <% if (messages.errors && messages.errors.length > 0) { %>
-                <div class="alert alert-danger">
-                    <h5>Please fix the following errors:</h5>
-                    <ul>
-                        <% messages.errors.forEach(error => { %>
-                            <li><%= error %></li>
-                        <% }) %>
-                    </ul>
-                </div>
-            <% } %>
-
-            <!-- Account Update Form -->
-            <form id="accountUpdateForm" action="/account/update" method="post" class="form-section">
-                <h2>Account Update</h2>
-                
-                <div class="mb-3">
-                    <label for="account_firstname" class="form-label">First Name:</label>
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        id="account_firstname" 
-                        name="account_firstname" 
-                        value="<%= account ? account.account_firstname : '' %>" 
-                        required
-                        minlength="2"
-                    >
-                </div>
-
-                <div class="mb-3">
-                    <label for="account_lastname" class="form-label">Last Name:</label>
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        id="account_lastname" 
-                        name="account_lastname" 
-                        value="<%= account ? account.account_lastname : '' %>" 
-                        required
-                        minlength="2"
-                    >
-                </div>
-
-                <div class="mb-3">
-                    <label for="account_email" class="form-label">Email:</label>
-                    <input 
-                        type="email" 
-                        class="form-control" 
-                        id="account_email" 
-                        name="account_email" 
-                        value="<%= account ? account.account_email : '' %>" 
-                        required
-                    >
-                </div>
-
-                <input type="hidden" name="account_id" value="<%= account ? account.account_id : '' %>">
-                
-                <button type="submit" class="btn btn-primary">Update Account</button>
-            </form>
-
-            <!-- Change Password Form -->
-            <form id="passwordUpdateForm" action="/account/update-password" method="post" class="form-section">
-                <h2>Change Password</h2>
-                
-                <div class="mb-3">
-                    <label for="account_password" class="form-label">New Password:</label>
-                    <input 
-                        type="password" 
-                        class="form-control" 
-                        id="account_password" 
-                        name="account_password" 
-                        required
-                        minlength="8"
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$"
-                    >
-                    <div class="form-text">
-                        <strong>Password Requirements:</strong>
-                        <ul class="small">
-                            <li>At least 8 characters long</li>
-                            <li>One uppercase letter</li>
-                            <li>One lowercase letter</li>
-                            <li>One number</li>
-                            <li>One special character (!@#$%^&*)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <input type="hidden" name="account_id" value="<%= account ? account.account_id : '' %>">
-                
-                <button type="submit" class="btn btn-warning">Change Password</button>
-            </form>
-
-            <div class="text-center mt-4">
-                <a href="/account/management" class="btn btn-secondary">Back to Account Management</a>
-            </div>
-        </div>
-    </main>
-    
-    <%- include('../partials/footer') %>
-    
-    <!-- Task 10: Client-side validation -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const accountUpdateForm = document.getElementById('accountUpdateForm');
-            const passwordUpdateForm = document.getElementById('passwordUpdateForm');
-
-            // Client-side validation for account update
-            if (accountUpdateForm) {
-                accountUpdateForm.addEventListener('submit', function(e) {
-                    let isValid = true;
-                    const errors = [];
-
-                    const firstName = document.getElementById('account_firstname').value.trim();
-                    const lastName = document.getElementById('account_lastname').value.trim();
-                    const email = document.getElementById('account_email').value.trim();
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    if (!firstName || firstName.length < 2) {
-                        errors.push('First name must be at least 2 characters long.');
-                        isValid = false;
-                    }
-
-                    if (!lastName || lastName.length < 2) {
-                        errors.push('Last name must be at least 2 characters long.');
-                        isValid = false;
-                    }
-
-                    if (!email) {
-                        errors.push('Email is required.');
-                        isValid = false;
-                    } else if (!emailRegex.test(email)) {
-                        errors.push('Please enter a valid email address.');
-                        isValid = false;
-                    }
-
-                    if (!isValid) {
-                        e.preventDefault();
-                        alert('Please fix the following errors:\\n' + errors.join('\\n'));
-                    }
-                });
-            }
-
-            // Client-side validation for password update
-            if (passwordUpdateForm) {
-                passwordUpdateForm.addEventListener('submit', function(e) {
-                    let isValid = true;
-                    const errors = [];
-
-                    const password = document.getElementById('account_password').value;
-                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
-
-                    if (!password) {
-                        errors.push('Password is required.');
-                        isValid = false;
-                    } else if (!passwordRegex.test(password)) {
-                        errors.push('Password does not meet the requirements.');
-                        isValid = false;
-                    }
-
-                    if (!isValid) {
-                        e.preventDefault();
-                        alert('Please fix the following errors:\\n' + errors.join('\\n'));
-                    }
-                });
-            }
-        });
-    </script>
+    <h1>Update Account</h1>
+    <% if (error) { %>
+        <div class="error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/account/update">
+        <input type="text" name="firstname" value="<%= user.account_firstname %>" required>
+        <input type="text" name="lastname" value="<%= user.account_lastname %>" required>
+        <input type="email" name="email" value="<%= user.account_email %>" required>
+        <button type="submit">Update</button>
+        <a href="/account/management"><button type="button" class="cancel">Cancel</button></a>
+    </form>
 </body>
 </html>

@@ -1,100 +1,47 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../layouts/head', { title: title }) %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
     <style>
-        .management-main {
-            padding: 50px 0;
-            background-color: #f8f9fa;
-            min-height: calc(100vh - 200px);
-        }
-        .account-info {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .inventory-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background: #333; color: white; padding: 1rem; }
+        .nav a { color: white; margin-right: 1rem; text-decoration: none; }
+        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
     </style>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <header class="header">
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/account/management">Account Management</a>
+            <a href="/logout">Logout</a>
+            <span style="float: right;">Welcome, <%= user.account_firstname %>!</span>
+        </nav>
+    </header>
+
+    <h1>Account Management</h1>
     
-    <main class="management-main">
-        <div class="container">
-            <h1><%= title %></h1>
-            
-            <!-- Display flash messages -->
-            <% if (messages.notice) { %>
-                <div class="alert alert-info">
-                    <%= messages.notice %>
-                </div>
+    <% if (showGreeting) { %>
+        <h2>
+            <% if (user.account_type === 'Admin') { %>
+                Welcome Administrator!
+            <% } else if (user.account_type === 'Employee') { %>
+                Welcome Employee!
             <% } %>
-            
-            <% if (messages.success) { %>
-                <div class="alert alert-success">
-                    <%= messages.success %>
-                </div>
-            <% } %>
-            
-            <% if (messages.error) { %>
-                <div class="alert alert-danger">
-                    <%= messages.error %>
-                </div>
-            <% } %>
-
-            <!-- Task 3: Greeting based on account type -->
-            <% if (account) { %>
-                <%# Show h2 greeting for all account types %>
-                <h2>Welcome <%= account.account_firstname %></h2>
-                
-                <!-- Account information display -->
-                <div class="account-info">
-                    <h3>Account Information</h3>
-                    <p><strong>Name:</strong> <%= account.account_firstname %> <%= account.account_lastname %></p>
-                    <p><strong>Email:</strong> <%= account.account_email %></p>
-                    <p><strong>Account Type:</strong> 
-                        <span class="badge 
-                            <% if (account.account_type === 'Admin') { %>bg-danger<% } %>
-                            <% if (account.account_type === 'Employee') { %>bg-warning<% } %>
-                            <% if (account.account_type === 'Client') { %>bg-primary<% } %>
-                        ">
-                            <%= account.account_type %>
-                        </span>
-                    </p>
-                </div>
-
-                <!-- Update account link - shown for all users -->
-                <div class="update-section mb-4">
-                    <a href="/account/update" class="btn btn-primary btn-lg">Update Account Information</a>
-                </div>
-
-                <!-- Task 3: Inventory management section ONLY for Employees/Admins -->
-                <% if (account.account_type === 'Employee' || account.account_type === 'Admin') { %>
-                    <div class="inventory-section">
-                        <h3>Inventory Management</h3>
-                        <p class="text-muted">As an <%= account.account_type %>, you have access to inventory management features.</p>
-                        <a href="/inv" class="btn btn-secondary">Manage Inventory</a>
-                    </div>
-                <% } else { %>
-                    <!-- Task 3: No h3 element for Client users (not visible in source) -->
-                <% } %>
-            <% } else { %>
-                <div class="alert alert-warning">
-                    <p>No account information found. Please log in.</p>
-                    <a href="/account/login" class="btn btn-primary">Login</a>
-                </div>
-            <% } %>
-        </div>
-    </main>
+        </h2>
+    <% } %>
     
-    <%- include('../partials/footer') %>
+    <div>
+        <p><strong>Name:</strong> <%= user.account_firstname %> <%= user.account_lastname %></p>
+        <p><strong>Email:</strong> <%= user.account_email %></p>
+        <p><strong>Account Type:</strong> <%= user.account_type %></p>
+    </div>
+    
+    <div>
+        <a href="/account/update" class="btn">Update Account</a>
+        <a href="/account/update-password" class="btn">Change Password</a>
+    </div>
 </body>
 </html>

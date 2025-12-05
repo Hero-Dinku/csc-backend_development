@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "csc-backend-development",
   "version": "1.0.0",
   "description": "Vehicle Management System with Account Management",
@@ -9,17 +9,23 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "ejs": "^3.1.9",
-    "pg": "^8.11.3",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "cookie-parser": "^1.4.6",
-    "express-session": "^1.17.3",
     "connect-flash": "^0.1.1",
-    "dotenv": "^16.3.1"
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.16.3",
+    "validator": "^13.15.23"
   },
-  "keywords": ["nodejs", "express", "postgresql", "authentication"],
+  "keywords": [
+    "nodejs",
+    "express",
+    "postgresql",
+    "authentication"
+  ],
   "author": "Hero Dinku",
   "license": "MIT"
 }
