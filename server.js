@@ -304,3 +304,18 @@ app.listen(PORT, () => {
     console.log(`🔑 Test accounts: http://localhost:${PORT}/test-accounts`);
     console.log(`👤 Login: http://localhost:${PORT}/login`);
 });
+
+
+// Export the app for testing or other entry points
+module.exports = app;
+
+// Only start server if this file is run directly
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📊 Database status: http://localhost:${PORT}/database-status`);
+        console.log(`🔑 Test accounts: http://localhost:${PORT}/test-accounts`);
+        console.log(`👤 Login: http://localhost:${PORT}/login`);
+    });
+}
