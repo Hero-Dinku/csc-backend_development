@@ -358,3 +358,6 @@ app.listen(PORT, () => {
     console.log("🚀 Server running on http://localhost:" + PORT);
     console.log("📊 Database status: http://localhost:" + PORT + "/database-status");
 });
+
+
+module.exports = app;
