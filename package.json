@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "csc-backend-development",
   "version": "1.0.0",
   "description": "Account Management System for W05 Assignment",
@@ -8,7 +8,12 @@
     "dev": "nodemon server.js",
     "test": "node test-all.js"
   },
-  "keywords": ["account-management", "nodejs", "postgresql", "jwt"],
+  "keywords": [
+    "account-management",
+    "nodejs",
+    "postgresql",
+    "jwt"
+  ],
   "author": "Hero Dinku",
   "license": "MIT",
   "dependencies": {
@@ -17,6 +22,7 @@
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-fileupload": "^1.5.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.0"
   },
