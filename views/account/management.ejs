@@ -1,90 +1,12 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .header { background: #333; color: white; padding: 1rem; }
-        .nav a { color: white; margin-right: 1rem; text-decoration: none; }
-        .alert { padding: 15px; border-radius: 4px; margin: 20px 0; }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
-        .btn-secondary { background: #6c757d; }
-        .user-info { background: #f8f9fa; padding: 20px; border-radius: 4px; margin: 20px 0; }
-        .activity-list { margin: 20px 0; }
-        .activity-item { padding: 10px; border-bottom: 1px solid #ddd; }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <nav class="nav">
-            <a href="/">Home</a>
-            <a href="/account/management">Account Management</a>
-            <a href="/logout">Logout</a>
-            <span style="float: right;">Welcome, <%= user.account_firstname %>!</span>
-        </nav>
-    </header>
+﻿<h1><%= title %></h1>
 
-    <% if (typeof success !== "undefined" && success) { %>
-        <div class="alert alert-success">
-            <strong>Success!</strong> <%= success %>
-        </div>
-    <% } %>
-    
-    <% if (typeof error !== "undefined" && error) { %>
-        <div class="alert alert-danger">
-            <strong>Error!</strong> <%= error %>
-        </div>
-    <% } %>
-
-    <main>
-        <h1>Account Management</h1>
-        
-        <% if (showGreeting) { %>
-            <h2>
-                <% if (user.account_type === "Admin") { %>
-                    Welcome Administrator!
-                <% } else if (user.account_type === "Employee") { %>
-                    Welcome Employee!
-                <% } %>
-            </h2>
-        <% } %>
-        
-        <div class="user-info">
-            <h3>Your Information</h3>
-            <p><strong>Name:</strong> <%= user.account_firstname %> <%= user.account_lastname %></p>
-            <p><strong>Email:</strong> <%= user.account_email %></p>
-            <p><strong>Account Type:</strong> <%= user.account_type %></p>
-            <p><strong>Last Login:</strong> 
-                <% if (user.last_login) { %>
-                    <%= new Date(user.last_login).toLocaleString() %>
-                <% } else { %>
-                    First time login!
-                <% } %>
-            </p>
-        </div>
-        
-        <% if (typeof recentActivities !== "undefined" && recentActivities && recentActivities.length > 0) { %>
-            <div class="activity-list">
-                <h3>Recent Activities</h3>
-                <% recentActivities.forEach(activity => { %>
-                    <div class="activity-item">
-                        <strong><%= activity.activity_type %></strong>
-                        <br><%= activity.activity_details %>
-                        <br><small><%= new Date(activity.created_at).toLocaleString() %></small>
-                    </div>
-                <% }) %>
-            </div>
-        <% } %>
-        
-        <div class="actions">
-            <a href="/account/update" class="btn">Update Account Information</a>
-            <a href="/account/update-password" class="btn">Change Password</a>
-            <a href="/account/activity-log" class="btn">View Full Activity Log</a>
-        </div>
-    </main>
-</body>
-</html>
+<% if (locals.accountData) { %>
+  <h2>Welcome <%= accountData.account_firstname %></h2>
+  
+  <p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
+  
+  <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+    <h3>Inventory Management</h3>
+    <p><a href="/inv/">Manage Inventory</a></p>
+  <% } %>
+<% } %>

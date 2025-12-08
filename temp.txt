@@ -1,3 +1,0 @@
-﻿
-// Activity Model
-const activityModel = require('./models/activityModel');

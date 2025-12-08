@@ -1,266 +1,46 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Management System</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .nav a {
-            color: #333;
-            text-decoration: none;
-            margin: 0 1rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .nav a:hover {
-            color: #667eea;
-        }
-        .welcome {
-            color: #666;
-            font-weight: 500;
-        }
-        .hero {
-            text-align: center;
-            padding: 6rem 2rem;
-            color: white;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: white;
-            color: #667eea;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 10px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-        .features {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .features h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 3rem;
-            font-size: 2.5rem;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        .feature-card h3 {
-            color: #667eea;
-            margin-top: 0;
-        }
-        .test-info {
-            background: #e8f4fd;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 2rem;
-            border-left: 4px solid #007bff;
-        }
-        .test-info h3 {
-            color: #007bff;
-            margin-top: 0;
-        }
-        .account-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        .account-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-        }
-        .password-note {
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            border-left: 4px solid #ffc107;
-        }
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .nav { flex-direction: column; gap: 1rem; }
-        }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <nav class="nav">
-            <div>
-                <a href="/">Home</a>
-                <% if (user) { %>
-                    <a href="/account/management">Account Management</a>
-                <% } %>
-            </div>
-            <div>
-                <% if (user) { %>
-                    <span class="welcome">Welcome, <%= user.account_firstname %>! (<%= user.account_type %>)</span>
-                    <a href="/logout">Logout</a>
-                <% } else { %>
-                    <a href="/login">Login</a>
-                <% } %>
-            </div>
-        </nav>
-    </header>
+﻿<h1><%= title %></h1>
+<div class="hero">
+  <div class="hero-content">
+    <h2>DMC Delorean</h2>
+    <p>🏆 3 Cup holders</p>
+    <p>🚪 Superman doors</p>
+    <p>🎲 Fuzzy dice!</p>
+    <a href="/inv/detail/1" class="own-today-btn">Own Today</a>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop" alt="DMC Delorean">
+  </div>
+</div>
 
-    <div class="hero">
-        <h1>Account Management System</h1>
-        <p>Professional account management with role-based access control, JWT authentication, and secure data handling</p>
-        
-        <% if (!user) { %>
-            <div>
-                <a href="/login" class="btn">Get Started</a>
-                <a href="#features" class="btn btn-outline">Learn More</a>
-            </div>
-        <% } else { %>
-            <div>
-                <a href="/account/management" class="btn">Go to Dashboard</a>
-                <a href="#features" class="btn btn-outline">View Features</a>
-            </div>
-        <% } %>
-    </div>
+<div class="reviews">
+  <h2>⭐ DMC Delorean Reviews</h2>
+  <ul>
+    <li>"So fast its almost like traveling in time!" ⚡ (4/5)</li>
+    <li>"Coolest ride on the road!" 😎 (4/5)</li>
+    <li>"I'm feeling McFly!" 🎬 (5/5)</li>
+    <li>"The most futuristic ride of our day!" 🚀 (4.5/5)</li>
+    <li>"80's livin and I love it!" 🕺 (5/5)</li>
+  </ul>
+</div>
 
-    <div class="features" id="features">
-        <h2>System Features</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>🔐 Secure Authentication</h3>
-                <p>JWT-based authentication with encrypted tokens and secure session management.</p>
-            </div>
-            <div class="feature-card">
-                <h3>👥 Role-Based Access</h3>
-                <p>Three user roles: Admin, Employee, and Client with different permissions and greetings.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📝 Account Management</h3>
-                <p>Update personal information, change passwords, and manage account settings.</p>
-            </div>
-            <div class="feature-card">
-                <h3>✅ Data Validation</h3>
-                <p>Client-side and server-side validation for all forms and data inputs.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🗄️ Database Security</h3>
-                <p>Prepared statements and parameterized queries to prevent SQL injection.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📱 Responsive Design</h3>
-                <p>Professional UI that works perfectly on all devices and screen sizes.</p>
-            </div>
-        </div>
-        
-        <% if (!user) { %>
-            <div class="test-info">
-                <h3>🧪 Test Accounts</h3>
-                <p>Use these credentials to test different user roles:</p>
-                
-                <div class="account-list">
-                    <div class="account-item">
-                        <strong>Admin Account</strong><br>
-                        Email: admin@test.com<br>
-                        Role: Administrator
-                    </div>
-                    <div class="account-item">
-                        <strong>Employee Account</strong><br>
-                        Email: employee@test.com<br>
-                        Role: Employee
-                    </div>
-                    <div class="account-item">
-                        <strong>Client Account</strong><br>
-                        Email: client@test.com<br>
-                        Role: Client
-                    </div>
-                </div>
-                
-                <div class="password-note">
-                    <strong>Password for all test accounts:</strong> Test123!
-                    <br><small>(Includes the exclamation mark at the end)</small>
-                </div>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="/login" class="btn" style="background: #007bff; color: white; padding: 10px 20px; display: inline-block;">Login Now</a>
-                </div>
-            </div>
-        <% } else { %>
-            <div class="test-info">
-                <h3>✅ You're Logged In</h3>
-                <p>Currently logged in as: <strong><%= user.account_firstname %> <%= user.account_lastname %></strong></p>
-                <p>Account Type: <strong><%= user.account_type %></strong></p>
-                <p>Email: <strong><%= user.account_email %></strong></p>
-                
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="/account/management" class="btn" style="background: #007bff; color: white; padding: 10px 20px; display: inline-block;">Go to Account Management</a>
-                </div>
-            </div>
-        <% } %>
+<div class="upgrades">
+  <h2>🔧 Delorean Upgrades</h2>
+  <div class="upgrades-grid">
+    <div class="upgrade-item">
+      <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=200&h=200&fit=crop" alt="Flux Capacitor">
+      <a href="#">⚡ Flux Capacitor</a>
     </div>
-</body>
-</html>
+    <div class="upgrade-item">
+      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&h=200&fit=crop" alt="Flame Decals">
+      <a href="#">🔥 Flame Decals</a>
+    </div>
+    <div class="upgrade-item">
+      <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&h=200&fit=crop" alt="Bumper Stickers">
+      <a href="#">🎨 Bumper Stickers</a>
+    </div>
+    <div class="upgrade-item">
+      <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=200&h=200&fit=crop" alt="Hub Caps">
+      <a href="#">⚙️ Hub Caps</a>
+    </div>
+  </div>
+</div>
